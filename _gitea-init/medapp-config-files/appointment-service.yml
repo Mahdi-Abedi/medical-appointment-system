@@ -1,0 +1,48 @@
+server:
+  port: 8083
+
+spring:
+  datasource:
+    url: jdbc:oracle:thin:@localhost:1521/XEPDB1
+    username: appointment
+    password: '{cipher}AYB0ElqS2BCLC/eqR4blt8gJjV6Tj1KYij3ym+UbutGgW4nYNDoyPj4/KaMGLQX2EGfE+tioVHS9M/UbY+Pg8Y04XzAeE5atpbcYnvnkFg4m0rzSwlHElmOJYgnwcGoQGUNKQDljHfJJ5qKGO2jIwVS3hzrmmsgF2EspdnfkHQGtQUK+jm/MDLg0iq0BYsfqZGhr818x733bAdSrlWjjf0efjM2f3Sz5fNP5UU+D6TteQho45Sr/uNO5f5uojVP/zE2H4R4lskR88w/FGtrroAllYWO17p03Ny1/YabMQ1hbKS+0IsXhJujGbGYvB6Bdrjh0WHjVCP6xb+qpTjVqZPBcpdS37MvcpAhHEpJAbaQnDkIqjaQYAVGaEZmuGjagFfB/yAlGRLKPu70DCRd1w5AsKVeFwEeFoyk6wUP+i+zJdQmbgsQI/YwvwWpT6WCDz2lTxMDMoV1DUmQ5cO0VSC495+PndO8/1eCR6pr4NjjPldcdB/Gfp5J6kpMaV5kP+IJzXmnKk2Aelm6+rlyYCeHcZtIn6eD7pYLsZ7Ydb3ccCw=='
+    driver-class-name: oracle.jdbc.OracleDriver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+  http:
+    serviceclient:
+      user-client:
+        base-url: http://localhost:8081
+      doctor-client:
+        base-url: http://localhost:8082
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: user
+    password: '{cipher}AYAmc7PUtzu3OPD29uzFaJ8o4Eao698yk9jKZ/7wlsKwopYaQczJWBOHrCo6wmxkpzU5Nlmejt/z9VgBkId8f49VXum1YItSBR1OCrB0eML/Hy7n+7CroCJZwI9hfP2yBfNqLbxHRYVaAXBvkr90MesjUaP+wf0RtmB02GeTI0Sa0z8sVFdF1Qd8PygGmnP9E+lw3fvCdorjAJcX5T1Mwd6KxQdRSI9Abco5BRsKib0qOcex0sIXsiBWaA8X1GunDOANIopr5eg5GLKs4iXpW6IJ1BeIg5Pa3o7A3clpHcgwkESBWII2nWOZPdzChPpcUF1YwyyC0GD2WFipG2HykOZ7NmhKqvHQz5Dv4Hk0frC7gUivehnEXIje7wKfgAoCdupAA2X3+sOr9IDLNvaT0iw+TPWrPGNcr/YhNzZw17myCdm6Y21RL9l4rXwLAELou6YFs84Qbyqx1KzDXHxKWVdBHsjSG6DSvQTkxxy6jcRvvaKOkmu3CXDbFJRhYrfreLQlZe67m5QRScBlmOrYOkDAE1QUPPdMGnLemFa3CNeh9w=='
+        
+eureka:
+  client:
+    should-unregister-on-shutdown: false
+    refresh:
+      enable: false
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${server.port}
+
+jwt:
+  secret: bWVkYXBwLXN1cGVyLXNlY3JldC1rZXktZm9yLWp3dC1zaWduaW5nLW11c3QtYmUtYXQtbGVhc3QtMjU2LWJpdHMtbG9uZy1lbm91Z2g=
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0

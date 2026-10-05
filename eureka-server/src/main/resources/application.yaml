@@ -1,0 +1,22 @@
+server:
+  port: 8761
+
+spring:
+  application:
+    name: eureka-server
+  config:
+    import: "optional:configserver:http://localhost:8888"
+  profiles:
+    active: dev
+
+eureka:
+  client:
+    refresh:
+      enable: false
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+  server:
+    enable-self-preservation: false
+    eviction-interval-timer-in-ms: 5000

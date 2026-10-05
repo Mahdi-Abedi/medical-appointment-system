@@ -1,0 +1,29 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus,busrefresh
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+eureka:
+  client:
+    should-unregister-on-shutdown: false
+    refresh:
+      enable: false
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    prefer-ip-address: true
+
+logging:
+  file:
+    name: logs/${spring.application.name}.log
+  logback:
+    rollingpolicy:
+      max-file-size: 5MB
+      max-history: 2

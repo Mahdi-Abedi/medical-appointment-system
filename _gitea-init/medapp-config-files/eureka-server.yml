@@ -1,0 +1,24 @@
+server:
+  port: 8761
+
+eureka:
+  client:
+    should-unregister-on-shutdown: false
+    refresh:
+      enable: false
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+  server:
+    enable-self-preservation: false
+    eviction-interval-timer-in-ms: 5000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always

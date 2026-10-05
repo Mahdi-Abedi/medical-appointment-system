@@ -1,0 +1,56 @@
+server:
+  port: 8080
+
+spring:
+  cloud:
+    gateway:
+      server:
+        webmvc:
+          discovery:
+            locator:
+              enabled: true
+              lower-case-service-id: true
+          routes:
+            - id: user-service-auth
+              uri: lb://USER-SERVICE
+              predicates:
+                - Path=/api/auth/**
+            - id: user-service-users
+              uri: lb://USER-SERVICE
+              predicates:
+                - Path=/api/users/**
+            - id: doctor-service
+              uri: lb://DOCTOR-SERVICE
+              predicates:
+                - Path=/api/doctors/**
+            - id: appointment-service
+              uri: lb://APPOINTMENT-SERVICE
+              predicates:
+                - Path=/api/appointments/**
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: user
+    password: '{cipher}AYAmc7PUtzu3OPD29uzFaJ8o4Eao698yk9jKZ/7wlsKwopYaQczJWBOHrCo6wmxkpzU5Nlmejt/z9VgBkId8f49VXum1YItSBR1OCrB0eML/Hy7n+7CroCJZwI9hfP2yBfNqLbxHRYVaAXBvkr90MesjUaP+wf0RtmB02GeTI0Sa0z8sVFdF1Qd8PygGmnP9E+lw3fvCdorjAJcX5T1Mwd6KxQdRSI9Abco5BRsKib0qOcex0sIXsiBWaA8X1GunDOANIopr5eg5GLKs4iXpW6IJ1BeIg5Pa3o7A3clpHcgwkESBWII2nWOZPdzChPpcUF1YwyyC0GD2WFipG2HykOZ7NmhKqvHQz5Dv4Hk0frC7gUivehnEXIje7wKfgAoCdupAA2X3+sOr9IDLNvaT0iw+TPWrPGNcr/YhNzZw17myCdm6Y21RL9l4rXwLAELou6YFs84Qbyqx1KzDXHxKWVdBHsjSG6DSvQTkxxy6jcRvvaKOkmu3CXDbFJRhYrfreLQlZe67m5QRScBlmOrYOkDAE1QUPPdMGnLemFa3CNeh9w=='
+
+eureka:
+  client:
+    should-unregister-on-shutdown: false
+    refresh:
+      enable: false
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${server.port}
+
+jwt:
+  secret: bWVkYXBwLXN1cGVyLXNlY3JldC1rZXktZm9yLWp3dC1zaWduaW5nLW11c3QtYmUtYXQtbGVhc3QtMjU2LWJpdHMtbG9uZy1lbm91Z2g=
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

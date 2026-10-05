@@ -1,0 +1,145 @@
+/* ============================================
+   Vazirmatn Font Faces
+   ============================================ */
+@font-face {
+    font-family: 'Vazirmatn';
+    src: url('./fonts/Vazirmatn-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Vazirmatn';
+    src: url('./fonts/Vazirmatn-Medium.woff2') format('woff2');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Vazirmatn';
+    src: url('./fonts/Vazirmatn-SemiBold.woff2') format('woff2');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Vazirmatn';
+    src: url('./fonts/Vazirmatn-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* ============================================
+   Lumo Theme Variable Overrides (رنگ اصلی بنفش)
+   ============================================ */
+html {
+    --lumo-primary-color: #7C3AED;
+    --lumo-primary-color-50pct: rgba(124, 58, 237, 0.5);
+    --lumo-primary-color-10pct: rgba(124, 58, 237, 0.1);
+    --lumo-primary-text-color: #6D28D9;
+    --lumo-primary-contrast-color: #FFFFFF;
+
+    --lumo-font-family: 'Vazirmatn', 'Segoe UI', Tahoma, sans-serif;
+
+    /* اندازه فونت پیش‌فرض */
+    --lumo-font-size-m: 15px;
+    --lumo-font-size-l: 17px;
+    --lumo-font-size-xl: 20px;
+
+    /* گوشه‌های گردتر */
+    --lumo-border-radius-m: 8px;
+    --lumo-border-radius-l: 12px;
+
+    /* RTL */
+    direction: rtl;
+}
+
+body {
+    font-family: var(--lumo-font-family);
+    direction: rtl;
+}
+
+/* ============================================
+   Global Styles
+   ============================================ */
+* {
+    font-family: var(--lumo-font-family);
+}
+
+/* کارت‌های سفید با سایه ملایم */
+.med-card {
+    background: #FFFFFF;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+    padding: 20px;
+    transition: box-shadow 0.2s ease;
+}
+
+.med-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* کارت کلیک‌پذیر (برای پزشکان) */
+.med-card.clickable {
+    cursor: pointer;
+}
+
+.med-card.clickable:hover {
+    border: 1px solid var(--lumo-primary-color-50pct);
+}
+
+/* ============================================
+   Fix RTL for Vaadin Components
+   ============================================ */
+/* آیکون‌های vaadin جهت‌دار را در RTL برعکس می‌کنیم (مثلاً back arrow) */
+[dir="rtl"] .v-icon {
+    /* فقط در صورت نیاز */
+}
+
+/* FormLayout با جهت درست */
+vaadin-form-layout {
+    --vaadin-form-item-label-width: 8em;
+}
+
+/* TextField / EmailField / PasswordField - برچسب‌ها راست‌چین */
+vaadin-text-field,
+vaadin-email-field,
+vaadin-password-field,
+vaadin-text-area,
+vaadin-select,
+vaadin-combo-box {
+    --vaadin-input-field-label-color: #4B5563;
+}
+
+/* Notification */
+vaadin-notification-card {
+    font-family: var(--lumo-font-family);
+    direction: rtl;
+}
+
+/* ============================================
+   Custom Utility Classes
+   ============================================ */
+.text-primary {
+    color: var(--lumo-primary-color);
+}
+
+.text-muted {
+    color: #6B7280;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.bg-light {
+    background: #F9FAFB;
+}
+
+.bg-primary-soft {
+    background: var(--lumo-primary-color-10pct);
+}

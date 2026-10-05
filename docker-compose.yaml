@@ -1,0 +1,143 @@
+services:
+  gitea-db:
+    image: postgres:latest
+    container_name: gitea-db
+    environment:
+      POSTGRES_USER: gitea
+      POSTGRES_PASSWORD: gitea
+      POSTGRES_DB: giteadb
+    ports:
+      - "5432:5432"
+    volumes:
+      - gitea_db_data:/var/lib/postgresql
+    networks:
+      - medapp-network
+
+  gitea:
+    image: docker.gitea.com/gitea:latest
+    container_name: gitea
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+      - GITEA__database__DB_TYPE=postgres
+      - GITEA__database__HOST=gitea-db:5432
+      - GITEA__database__NAME=giteadb
+      - GITEA__database__USER=gitea
+      - GITEA__database__PASSWD=gitea
+      - GITEA__server__ROOT_URL=http://localhost:3000/
+      - GITEA__server__SSH_PORT=2222
+      - GITEA__service__DISABLE_REGISTRATION=true
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+      - "2222:22"
+    volumes:
+      - gitea_data:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    depends_on:
+      - gitea-db
+    networks:
+      - medapp-network
+
+  gitea-init:
+    image: docker.gitea.com/gitea:latest
+    container_name: gitea-init
+    user: git
+    depends_on:
+      - gitea
+    volumes:
+      - gitea_data:/data
+      - ./_gitea-init:/gitea-init:ro
+      - ./_gitea-init/medapp-config-files:/medapp-config-files:ro
+    environment:
+      - GITEA_URL=http://gitea:3000
+      - GITEA_ADMIN_USER=admin
+      - GITEA_ADMIN_PASS=admin
+      - GITEA_ADMIN_EMAIL=admin@example.com
+      - REPO_NAME=medapp-config
+      - REPO_DESCRIPTION=Repository created automatically
+      - REPO_PRIVATE=false
+    entrypoint: [ "/bin/sh", "/gitea-init/init.sh" ]
+    restart: "no"
+    networks:
+      - medapp-network
+
+  oracle-db:
+    image: gvenzl/oracle-xe
+    container_name: oracle-db
+    environment:
+      ORACLE_PASSWORD: password
+      APP_USER: doctor
+      APP_USER_PASSWORD: doctor
+      ORACLE_CHARACTERSET: AL32UTF8
+    ports:
+      - "1521:1521"
+    volumes:
+      - oracle_data:/opt/oracle/oradata
+      - ./oracle-init:/container-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "healthcheck.sh"]
+      interval: 20s
+      timeout: 10s
+      retries: 15
+      start_period: 180s
+    networks:
+      - medapp-network
+
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: user
+    configs:
+      - source: rabbitmq-plugins
+        target: /etc/rabbitmq/enabled_plugins
+    volumes:
+      - rabbitmq-lib:/var/lib/rabbitmq/
+      - rabbitmq-log:/var/log/rabbitmq
+    networks:
+      - medapp-network
+
+  postgres-user:
+    image: postgres:latest
+    container_name: postgres-user
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: user
+      POSTGRES_DB: userdb
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_user_data:/var/lib/postgresql
+    networks:
+      - medapp-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d userdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+configs:
+  rabbitmq-plugins:
+    content: "[rabbitmq_management]."
+
+volumes:
+  gitea_data:
+  gitea_db_data:
+  oracle_data:
+  rabbitmq-lib:
+    driver: local
+  rabbitmq-log:
+    driver: local
+  postgres_user_data:
+
+networks:
+  medapp-network:
+    external: true
+    name: medical-appointment-system_medapp-network
